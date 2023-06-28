@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
-import useGetProductList from "./api";
-import { TProduct } from "./type";
+import useGetProductList from "../api";
+import { TProduct } from "../type";
+import classes from "./ScrollList.module.scss";
 
 const ScrollList = () => {
   const [search, setSearch] = useState("");
@@ -58,30 +59,40 @@ const ScrollList = () => {
   };
 
   return (
-    <div>
-      <input
-        placeholder="search"
-        value={search}
-        onChange={(event) => onInput(event.target.value)}
-      />
-      <button
-        onClick={() => {
-          onSearch();
-        }}
-      >
-        search
-      </button>
+    <div className={classes.list}>
+      <div>
+        <input
+          className={classes.input}
+          placeholder="Search"
+          value={search}
+          onChange={(event) => onInput(event.target.value)}
+        />
+        <button
+          className={classes.button}
+          onClick={() => {
+            onSearch();
+          }}
+        >
+          Search
+        </button>
+      </div>
       <ul
         style={{
           height: 200,
-          overflow: "scroll",
+          overflowY: "scroll",
+          listStyleType: "none",
         }}
         ref={ref}
         onScroll={onScroll}
       >
         {(list &&
           list.length &&
-          list.map((product) => <li key={product.id}>{product.title}</li>)) ||
+          list.map((product) => (
+            <li key={product.id}>
+              <div>{product.title}</div>
+              <div>{product.price}</div>
+            </li>
+          ))) ||
           "empty"}
         {isLoadingProductList && !isFetching && "loading..."}
       </ul>

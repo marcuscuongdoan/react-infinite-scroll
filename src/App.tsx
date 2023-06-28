@@ -1,5 +1,6 @@
-import ScrollList from "./ScrollList";
+import { ScrollList } from "./ScrollList";
 import { QueryClient, QueryClientProvider } from "react-query";
+import "./App.css";
 
 const queryClient = new QueryClient();
 
