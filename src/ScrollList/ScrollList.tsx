@@ -13,10 +13,8 @@ const ScrollList = () => {
 
   const {
     data: productList,
-    isLoading: isLoadingProductList,
     isFetching,
     refetch,
-    isPreviousData,
   } = useGetProductList({ search, limit: 15, skip: skip });
 
   useEffect(() => {
@@ -32,15 +30,18 @@ const ScrollList = () => {
       setList([...list, ...productList?.products]);
   }, [productList]);
 
+  useEffect(() => {
+    console.log("searching");
+    setList([]);
+    setSkip(0);
+    refetch();
+  }, [search]);
+
   const onInput = (value: string) => {
     setSearch(value);
   };
 
   const onSearch = () => {
-    if (isPreviousData) return;
-
-    setList([]);
-    setSkip(0);
     refetch();
   };
 
@@ -51,7 +52,7 @@ const ScrollList = () => {
 
     if (
       ref.current.scrollTop + ref.current.offsetHeight >=
-      ref.current.scrollHeight - 10
+      ref.current.scrollHeight - 40
     ) {
       setSkip(list.length || 0);
       refetch();
@@ -60,22 +61,11 @@ const ScrollList = () => {
 
   return (
     <div className={classes.list}>
-      <div>
-        <input
-          className={classes.input}
-          placeholder="Search"
-          value={search}
-          onChange={(event) => onInput(event.target.value)}
-        />
-        <button
-          className={classes.button}
-          onClick={() => {
-            onSearch();
-          }}
-        >
-          Search
-        </button>
-      </div>
+      <input
+        className={classes.input}
+        placeholder="Search"
+        onChange={(event) => onInput(event.target.value)}
+      />
       <ul
         style={{
           height: 200,
@@ -93,8 +83,8 @@ const ScrollList = () => {
               <div>{product.price}</div>
             </li>
           ))) ||
-          "empty"}
-        {isLoadingProductList && !isFetching && "loading..."}
+          (!isFetching && "empty")}
+        {isFetching && "loading..."}
       </ul>
     </div>
   );
