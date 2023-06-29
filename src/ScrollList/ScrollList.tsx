@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useGetProductList from "../api";
 import { TProduct } from "../type";
 import classes from "./ScrollList.module.scss";
+import _ from "lodash";
 
 const ScrollList = () => {
   const [search, setSearch] = useState("");
@@ -41,9 +42,7 @@ const ScrollList = () => {
     setSearch(value);
   };
 
-  const onSearch = () => {
-    refetch();
-  };
+  const debouceOnInput = useCallback(_.debounce(onInput, 500), []);
 
   const onScroll = () => {
     if (!ref.current) return;
@@ -64,7 +63,7 @@ const ScrollList = () => {
       <input
         className={classes.input}
         placeholder="Search"
-        onChange={(event) => onInput(event.target.value)}
+        onChange={(event) => debouceOnInput(event.target.value)}
       />
       <ul
         style={{
