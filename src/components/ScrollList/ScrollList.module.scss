@@ -1,17 +1,12 @@
 .list {
   padding: 15px;
-  background-color: white;
+  background-color: #f5f5fa;
   height: 50%;
   width: 500px;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  .input {
-    padding: 10px;
-    margin-right: 5px;
-  }
 
   ul {
     border: 1px solid gray;
@@ -46,5 +41,11 @@
         display: inline-block;
       }
     }
+  }
+
+  .button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
   }
 }

@@ -1,29 +1,34 @@
-import { ScrollList } from "./ScrollList";
+import { LoginForm, ScrollList } from "./components";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "./App.css";
+import { createContext, useEffect, useState } from "react";
+import { TUser } from "./type";
 
 const queryClient = new QueryClient();
 
+export const UserContext = createContext<{
+  user?: TUser;
+  setUser: (user?: TUser) => void;
+}>({
+  user: undefined,
+  setUser: () => {},
+});
+
 function App() {
+  const [user, setUser] = useState<TUser>();
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) setUser(JSON.parse(user));
+  }, []);
   return (
     <QueryClientProvider client={queryClient} contextSharing>
-      <div className="App">
-        {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
-        <ScrollList />
-      </div>
+      <UserContext.Provider value={{ user: user, setUser: setUser }}>
+        <div className="App">
+          {!user && <LoginForm />}
+          {user && <ScrollList />}
+        </div>
+      </UserContext.Provider>
     </QueryClientProvider>
   );
 }
