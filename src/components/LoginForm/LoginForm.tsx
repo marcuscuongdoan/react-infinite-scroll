@@ -1,42 +1,38 @@
-import { FormEvent, useContext, useState } from "react";
-import { useLogin } from "../../api";
-import classes from "./LoginForm.module.scss";
-import { UserContext } from "../../App";
+import classes from './LoginForm.module.scss'
+import { FormEvent, useContext, useState } from 'react'
+import { UserContext } from '../../App'
+import { useLogin } from '../../api'
 
 export const LoginForm = () => {
-  const { mutate: login, isLoading } = useLogin();
-  const [isError, setError] = useState("");
-
-  const { setUser } = useContext(UserContext);
+  const { mutate: login, isLoading } = useLogin()
+  const { setUser } = useContext(UserContext)
+  const [isError, setError] = useState('')
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError("");
-    console.log(event.currentTarget.username.value);
-    console.log(event.currentTarget.password.value);
+    event.preventDefault()
+    setError('')
 
     login(
       {
-        username: event.currentTarget.username.value || "",
-        password: event.currentTarget.password.value || "",
+        username: event.currentTarget.username.value || '',
+        password: event.currentTarget.password.value || '',
       },
       {
-        onSuccess: (e) => {
-          console.log(e);
-          setUser(e);
-          localStorage.setItem("user", JSON.stringify(e));
+        onSuccess: e => {
+          setUser(e)
+          localStorage.setItem('user', JSON.stringify(e))
         },
-        onError: (e) => {
-          setError(e.message);
+        onError: e => {
+          setError(e.message)
         },
       }
-    );
-  };
+    )
+  }
   return (
     <div
       className="background"
       style={{
-        borderRadius: "1rem",
+        borderRadius: '1rem',
         padding: 50,
         width: 400,
       }}
@@ -60,13 +56,13 @@ export const LoginForm = () => {
             placeholder="Don't let anyone see it!"
           />
         </div>
-        <div className={classes["button-wrapper"]}>
+        <div className={classes['button-wrapper']}>
           <button className="primary" type="submit" disabled={isLoading}>
-            {isLoading ? "Chotto mate..." : `Let's goooo`}
+            {isLoading ? 'Chotto mate...' : `Let's goooo`}
           </button>
           <button type="reset">Reset</button>
         </div>
       </form>
     </div>
-  );
-};
+  )
+}

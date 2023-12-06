@@ -1,34 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { useGetProductList } from "../../api";
-import { TProduct } from "../../type";
-import classes from "./ScrollList.module.scss";
-import _ from "lodash";
-import { UserContext } from "../../App";
-import { ProductModal } from "../ProductModal";
+import _ from 'lodash'
+import classes from './ScrollList.module.scss'
+import { ProductModal } from '../ProductModal'
+import { TProduct } from '../../type'
+import { UserContext } from '../../App'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useGetProductList } from '../../api'
 
 const ScrollList = () => {
-  const [search, setSearch] = useState("");
-  const [skip, setSkip] = useState(0);
+  const { user, setUser } = useContext(UserContext)
+  const [search, setSearch] = useState('')
+  const [skip, setSkip] = useState(0)
 
-  const [list, setList] = useState<TProduct[]>([]);
-  const ref = useRef<HTMLUListElement | null>(null);
+  const [list, setList] = useState<TProduct[]>([])
 
-  const { user, setUser } = useContext(UserContext);
+  const [selectedProduct, setSelectedProduct] = useState<TProduct>()
 
-  const [selectedProduct, setSelectedProduct] = useState<TProduct>();
-
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLUListElement | null>(null)
 
   const {
     data: productList,
     isFetching,
     refetch,
-  } = useGetProductList({ search, limit: 15, skip: skip });
+  } = useGetProductList({ search, limit: 15, skip })
 
   useEffect(() => {
-    refetch();
-  }, []);
+    refetch()
+  }, [])
 
   useEffect(() => {
     if (
@@ -36,35 +35,34 @@ const ScrollList = () => {
       productList.products.length &&
       productList.products.length
     )
-      setList([...list, ...productList?.products]);
-  }, [productList]);
+      setList([...list, ...productList?.products])
+  }, [productList])
 
   useEffect(() => {
-    console.log("searching");
-    setList([]);
-    setSkip(0);
-    refetch();
-  }, [search]);
+    setList([])
+    setSkip(0)
+    refetch()
+  }, [search])
 
   const onInput = (value: string) => {
-    setSearch(value);
-  };
+    setSearch(value)
+  }
 
-  const debouceOnInput = useCallback(_.debounce(onInput, 500), []);
+  const debouceOnInput = useCallback(_.debounce(onInput, 500), [])
 
   const onScroll = () => {
-    if (!ref.current) return;
+    if (!ref.current) return
     if (productList && productList.total && list.length === productList.total)
-      return;
+      return
 
     if (
       ref.current.scrollTop + ref.current.offsetHeight >=
       ref.current.scrollHeight - 40
     ) {
-      setSkip(list.length || 0);
-      refetch();
+      setSkip(list.length || 0)
+      refetch()
     }
-  };
+  }
 
   return (
     <>
@@ -73,13 +71,13 @@ const ScrollList = () => {
         <input
           className={classes.input}
           placeholder="Search"
-          onChange={(event) => debouceOnInput(event.target.value)}
+          onChange={event => debouceOnInput(event.target.value)}
         />
-        <div className={classes["button-wrapper"]}>
+        <div className={classes['button-wrapper']}>
           <button
             onClick={() => {
-              setUser();
-              localStorage.removeItem("user");
+              setUser()
+              localStorage.removeItem('user')
             }}
           >
             Logout
@@ -88,33 +86,33 @@ const ScrollList = () => {
         <ul
           style={{
             height: 200,
-            overflowY: "scroll",
-            listStyleType: "none",
+            overflowY: 'scroll',
+            listStyleType: 'none',
           }}
           ref={ref}
           onScroll={onScroll}
         >
           {(list &&
             list.length &&
-            list.map((product) => (
+            list.map(product => (
               <li
                 key={product.id}
                 onClick={() => {
-                  setSelectedProduct(product);
-                  setOpen(true);
+                  setSelectedProduct(product)
+                  setOpen(true)
                 }}
               >
                 <div>{product.title}</div>
                 <div>{product.price}</div>
               </li>
             ))) ||
-            (!isFetching && "empty")}
-          {isFetching && "loading..."}
+            (!isFetching && 'empty')}
+          {isFetching && 'loading...'}
         </ul>
-        <div className={classes["button-wrapper"]}>
+        <div className={classes['button-wrapper']}>
           <button
             onClick={() => {
-              setOpen(true);
+              setOpen(true)
             }}
           >
             Create
@@ -125,14 +123,14 @@ const ScrollList = () => {
         product={selectedProduct}
         open={open}
         onClose={(isSuccess?: boolean) => {
-          setOpen(false);
-          setSelectedProduct(undefined);
+          setOpen(false)
+          setSelectedProduct(undefined)
 
-          if (isSuccess) refetch();
+          if (isSuccess) refetch()
         }}
       />
     </>
-  );
-};
+  )
+}
 
-export default ScrollList;
+export default ScrollList

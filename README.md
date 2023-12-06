@@ -14,6 +14,10 @@ Therefore, the create, update, delete don't really affect the data from source's
 The UI mostly uses opensource and customized UI, so it may not be attractive as you expect.
 Only auth test is currently implemented.
 
+Account information from dummyjson:
+username: 'kminchelle',
+password: '0lelplR',
+
 ## Available Scripts
 
 In the project directory, you can run:

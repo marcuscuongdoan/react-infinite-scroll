@@ -1,84 +1,80 @@
-import { useEffect, useState } from "react";
-import { TProduct } from "../../type";
-import classes from "./ProductModal.module.scss";
-import {
-  useCreateProduct,
-  useDeleteProduct,
-  useUpdateProduct,
-} from "../../api";
+import classes from './ProductModal.module.scss'
+import { TProduct } from '../../type'
+import { useCreateProduct, useDeleteProduct, useUpdateProduct } from '../../api'
+import { useEffect, useState } from 'react'
 
 type TProductProps = {
-  product?: Partial<TProduct>;
-  open: boolean;
-  onClose: (success?: boolean) => void;
-};
+  product?: Partial<TProduct>
+  open: boolean
+  onClose: (success?: boolean) => void
+}
 
 export const ProductModal = ({
   product,
   open = false,
   onClose,
 }: TProductProps) => {
-  const [title, setTitle] = useState(product?.title || "");
+  const [title, setTitle] = useState(product?.title || '')
 
   useEffect(() => {
-    setTitle(product?.title || "");
-  }, [product]);
+    setTitle(product?.title || '')
+  }, [product])
 
   const { mutate: createProduct, isLoading: isLoadingCreate } =
-    useCreateProduct();
+    useCreateProduct()
 
   const { mutate: updateProduct, isLoading: isLoadingUpdate } =
-    useUpdateProduct();
+    useUpdateProduct()
 
   const { mutate: deleteProduct, isLoading: isLoadingDelete } =
-    useDeleteProduct();
+    useDeleteProduct()
 
   const onCreate = () => {
     createProduct(
       { title },
       {
         onSuccess: () => {
-          alert("Create Successful!");
-          onClose(true);
+          alert('Create Successful!')
+          onClose(true)
         },
       }
-    );
-  };
+    )
+  }
 
   const onUpdate = () => {
     updateProduct(
       { id: product?.id!, title },
       {
         onSuccess: () => {
-          alert("Update Successful!");
-          onClose(true);
+          alert('Update Successful!')
+          onClose(true)
         },
       }
-    );
-  };
+    )
+  }
 
   const onDelete = () => {
     deleteProduct(
       { id: product?.id! },
       {
         onSuccess: () => {
-          alert("Delete Successful!");
-          onClose(true);
+          alert('Delete Successful!')
+          onClose(true)
         },
       }
-    );
-  };
+    )
+  }
 
   return (
     <>
       {open && (
-        <div className={classes["modal-wrapper"]}>
+        <div className={classes['modal-wrapper']}>
           <div className={classes.modal}>
             <span className={classes.close} onClick={() => onClose()}>
               x
             </span>
             <p>
-              {product ? `Product Id: ${product.id}` : "Create new Product"}
+              {product ? `Product Id: ${product.id}` : 'Create new Product'}
             </p>
             <label>Product Name</label>
             <input
@@ -86,9 +82,9 @@ export const ProductModal = ({
               placeholder="Product Name"
               required
               value={title}
-              onChange={(event) => setTitle(event.target.value)}
+              onChange={event => setTitle(event.target.value)}
             />
-            <div className={classes["button-wrapper"]}>
+            <div className={classes['button-wrapper']}>
               {product && (
                 <button
                   disabled={isLoadingDelete || isLoadingUpdate}
@@ -100,16 +96,16 @@ export const ProductModal = ({
               <button
                 disabled={isLoadingCreate || isLoadingUpdate || isLoadingDelete}
                 onClick={() => {
-                  if (!product) return onCreate();
-                  return onUpdate();
+                  if (!product) return onCreate()
+                  return onUpdate()
                 }}
               >
-                {product ? "Update" : "Create"}
+                {product ? 'Update' : 'Create'}
               </button>
             </div>
           </div>
         </div>
       )}
     </>
-  );
-};
+  )
+}
