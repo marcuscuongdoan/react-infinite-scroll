@@ -1,7 +1,7 @@
 import { useMutation } from "react-query";
 import { TError, TLoginParams, TUser } from "../type";
 
-async function login(params: TLoginParams) {
+export async function login(params: TLoginParams) {
   return await fetch("https://dummyjson.com/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
